@@ -3,7 +3,7 @@ name: Deploy to DigitalOcean Dev
 on:
   push:
     branches:
-      - dev  # Trigger deployment only on dev branch push
+      - dev
 
 jobs:
   deploy:
@@ -11,22 +11,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy dev branch to test environment
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: SSH & Deploy
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.DIGITALOCEAN_TEST_HOST }}            # e.g., 167.172.76.xxx
-          username: ${{ secrets.DIGITALOCEAN_USERNAME }}         # e.g., hungrytiger
-          key: ${{ secrets.DIGITALOCEAN_TEST_PRIVATE_KEY }}      # Your local private key
-          port: ${{ secrets.DIGITALOCEAN_PORT }}                 # Usually 22
-
+          host: ${{ secrets.SSH_HOST }}              # ✅ Corrected name
+          username: ${{ secrets.SSH_USER }}          # ✅ Corrected name
+          port: ${{ secrets.SSH_PORT }}              # ✅ Corrected name
+          key: ${{ secrets.SSH_PRIVATE_KEY }}        # ✅ Corrected name
           script: |
-            echo "➡️ Deploying to test server..."
-            cd ~/chatchef_dir                                     # Your project directory
-            git stash                                             # Stash any local changes
-            git pull origin dev                                   # Pull latest changes from dev branch
-            source venv/bin/activate                              # Activate virtualenv
-            pip install -r requirements.txt                       # Install dependencies
-            python manage.py migrate                              # Run DB migrations
-            python manage.py collectstatic --noinput              # Optional: collect static files
-            sudo systemctl restart gunicorn_chatchef              # Restart Gunicorn service
-            echo "✅ Deployment complete."
+            cd ~/chatchef_dir
+            git stash
+            git pull origin dev
+            source venv/bin/activate
+            pip install -r requirements.txt
+            python manage.py migrate
+            python manage.py collectstatic --noinput
+            sudo systemctl restart gunicorn_chatchef
