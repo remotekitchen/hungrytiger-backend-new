@@ -81,7 +81,7 @@ INSTALLED_APPS = [
 
 ]
 
-SERVICE_ACCOUNT_KEY_PATH = os.path.join(BASE_DIR, 'chatchef', 'settings', 'serviceAccountKey.json')
+SERVICE_ACCOUNT_KEY_PATH = os.path.join(BASE_DIR, 'hungrytiger', 'settings', 'serviceAccountKey.json')
 cred = credentials.Certificate(SERVICE_ACCOUNT_KEY_PATH)
 try:
     FIREBASE_APP = get_app() 
@@ -108,7 +108,7 @@ MIDDLEWARE = [
     # 'allauth.account.middleware.AccountMiddleware',
 ]
 
-ROOT_URLCONF = "chatchef.urls"
+ROOT_URLCONF = "hungrytiger.urls"
 
 TEMPLATES = [
     {
@@ -127,7 +127,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "chatchef.wsgi.application"
+WSGI_APPLICATION = "hungrytiger.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
