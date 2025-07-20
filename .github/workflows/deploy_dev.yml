@@ -1,13 +1,13 @@
-name: Deploy to DigitalOcean Dev
+name: Deploy to DigitalOcean Prod
 
 on:
   push:
     branches:
-      - dev
+      - main  # ✅ Trigger only when pushing to the production branch
 
 jobs:
   deploy:
-    name: Deploy Dev to Test Server
+    name: Deploy Prod to Live Server
     runs-on: ubuntu-latest
 
     steps:
@@ -17,16 +17,16 @@ jobs:
       - name: SSH & Deploy
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SSH_HOST }}              # ✅ Corrected name
-          username: ${{ secrets.SSH_USER }}          # ✅ Corrected name
-          port: ${{ secrets.SSH_PORT }}              # ✅ Corrected name
-          key: ${{ secrets.SSH_PRIVATE_KEY }}        # ✅ Corrected name
+          host: ${{ secrets.PROD_SSH_HOST }}              # ✅ New: production IP/domain
+          username: ${{ secrets.PROD_SSH_USER }}           # ✅ New: production SSH username
+          port: ${{ secrets.PROD_SSH_PORT }}               # ✅ New: production SSH port (usually 22)
+          key: ${{ secrets.PROD_SSH_PRIVATE_KEY }}         # ✅ New: production private key
           script: |
-            cd ~/chatchef_dir
+            cd ~/hungrytiger-backend-new                   # ✅ Correct production directory
             git stash
-            git pull origin dev
+            git pull origin main
             source venv/bin/activate
             pip install -r requirements.txt
             python manage.py migrate
             python manage.py collectstatic --noinput
-            sudo systemctl restart gunicorn_chatchef
+            sudo systemctl restart gunicorn                # ✅ Adjust this if your prod uses a different service name
